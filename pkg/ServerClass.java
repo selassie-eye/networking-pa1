@@ -3,7 +3,7 @@ package pkg;
 import java.io.*;
 import java.net.*;
 
-public class Server {
+public class ServerClass {
     private ServerSocket socket;
     private Socket client;
     private int port;
@@ -21,7 +21,7 @@ public class Server {
     private Boolean eflag = false;
     private String error = "";
 
-    public Server(int p) {
+    public ServerClass(int p) {
         port = p;
         try {
             socket = new ServerSocket(port);

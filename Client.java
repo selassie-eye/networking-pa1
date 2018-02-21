@@ -1,10 +1,10 @@
-import pkg.Server;
+import pkg.ClientClass;
 
-public class ServerMain {
+public class Client{
     public static void main(String[] args) {
-        System.out.println("Starting server...");
+        System.out.println("Starting client...");
         try {
-            Server server = new Server(Integer.parseInt(args[0]));
+            ClientClass client = new ClientClass(args[0], Integer.parseInt(args[1]));
         } catch (NumberFormatException e) {
             System.out.println("Incorrect argument format.");
         } catch (NullPointerException e) {

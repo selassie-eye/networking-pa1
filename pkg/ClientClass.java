@@ -3,7 +3,7 @@ package pkg;
 import java.io.*;
 import java.net.*;
 
-public class Client {
+public class ClientClass {
     private int state = 0;
     /* States
         0: INIT
@@ -11,7 +11,7 @@ public class Client {
         2: WRITING
     */
 
-    public Client(String host, int port) {
+    public ClientClass(String host, int port) {
         start(host, port);
     }
 
