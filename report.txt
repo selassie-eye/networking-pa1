@@ -1,0 +1,132 @@
+Khari Ollivierre
+9995-6417
+ollivierre.khari@ufl.edu
+
+Compilation/Execution instructions
+    Compilation: In the top-level directory, run "javac pkg/*.java *.java".
+    Execution: "java Server <int portNo>" starts the server, "java Client <String hostIP> <int portNo>" starts the client.
+
+Code Structure
+    pkg/Server.java
+        Attributes:
+            ServerSocket socket - Socket for accepting server requests
+            Socket client - Socket for clients connected to the server
+            int port - Port server is connected to
+            PrintWriter writer - Output stream controller for server
+            BufferedReader reader - Input stream controller for server
+            int state - Value representing current state of server
+            Boolean eflag - Global error indicator
+            String error - Global error message
+        Methods
+            Server(int p) - Server constructor, initializes this.socket and calls start(port)
+            void start(int port) - Initializes communication protocol by accepting an incoming
+                client connection and configuring the writer and reader to communicate with it.
+                Sends connection message to client and begins communication loop.
+            void checkInput(String[] in) - Checks parsed input to ensure it conforms to project standards.
+                If it does not, the global error is set and the applicable error message is sent to the client.
+            String reqProtocol(String[] req) - Performs requested operation according to client request (case-insensitive):
+                "add": Returns cumulative sum of subsequent arguments.
+                "subtract": Returns difference between first argument and subsequent arguments.
+                "multiply": Returns product of first argument and subsequent arguments.
+                "bye":  Returns -5 to client, then closes client socket and restarts communication loop (start(port)).
+                "terminate": Returns -5 to client, then closes client socket and exits.
+    
+    pkg/Client.java
+        Attributes
+            int state: Value representing current state of client
+        Methods
+            Client(String host, int port) - Client constructor
+            void start(String host, int port) - Communication loop for client. Connects to server and
+                configures reader and writer for server communication. Waits for hello message then begins
+                alternating between sending requests and accepting responses.
+    ServerMain.java - Executable program that runs the server
+    ClientMain.java - Executable program that creates a client
+
+Simultaneous output from client and server:
+    Client: 
+        PS C:\Users\Khari\Documents\CNT4007C\pa1> java ClientMain localhost 8000
+        Starting client...
+        Connecting to server...
+        Connected to server. Starting command prompt...
+        > aDd 1 1
+        Response: 2
+        > sUbTRaCt 3 2
+        Response: 1
+        > multiply 4
+        -2: Number of inputs less than 2.
+        > multipa 1 2 3
+        -1: Incorrect operation command.
+        > multiply 2 2 2
+        Response: 8
+        > bye 4 a d
+        -5: Server exit.
+        PS C:\Users\Khari\Documents\CNT4007C\pa1>
+    Server:
+        PS C:\Users\Khari\Documents\CNT4007C\pa1> java ServerMain 8000
+        Starting server...
+        Connection made on port 8000
+        Hostname: 0.0.0.0
+
+        From client: Hello!
+        Parsed Input: {Hello!} Command length: 1
+        Waiting for request...
+        To client: Waiting!
+
+        From client: aDd 1 1
+        Parsed Input: {aDd} {1} {1} Command length: 3
+        Correct command.
+        To client: 2
+
+        From client: Received!
+        Parsed Input: {Received!} Command length: 1
+        Waiting for request...
+        To client: Waiting!
+
+        From client: sUbTRaCt 3 2
+        Parsed Input: {sUbTRaCt} {3} {2} Command length: 3
+        Correct command.
+        To client: 1
+
+        From client: Received!
+        Parsed Input: {Received!} Command length: 1
+        Waiting for request...
+        To client: Waiting!
+
+        From client: multiply 4
+        Parsed Input: {multiply} {4} Command length: 2
+        Error: Not enough arguments.
+        Correct command.
+        To client: -2
+
+        From client: Received!
+        Parsed Input: {Received!} Command length: 1
+        Waiting for request...
+        To client: Waiting!
+
+        From client: multipa 1 2 3
+        Parsed Input: {multipa} {1} {2} {3} Command length: 4
+        Error: Incorrect command.
+        To client: -1
+
+        From client: Received!
+        Parsed Input: {Received!} Command length: 1
+        Waiting for request...
+        To client: Waiting!
+
+        From client: multiply 2 2 2
+        Parsed Input: {multiply} {2} {2} {2} Command length: 4
+        Correct command.
+        To client: 8
+
+        From client: Received!
+        Parsed Input: {Received!} Command length: 1
+        Waiting for request...
+        To client: Waiting!
+
+        From client: bye 4 a d
+        Parsed Input: {bye} {4} {a} {d} Command length: 4
+        Client exit.
+    Notes:
+        Server output reflects incoming client messages, outgoing responses and some of the protocol logic
+        Client output after successful connection is a terminal prompt for user input followed by the server response.
+        Commands are case-insensitive.
