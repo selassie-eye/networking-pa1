@@ -36,7 +36,7 @@ public class Server {
             client = socket.accept();
             writer = new PrintWriter(client.getOutputStream(), true);
             reader = new BufferedReader(new InputStreamReader(client.getInputStream()));
-            System.out.printf("Connection made on port %d\nHostname: %s\n", port, socket.getInetAddress().getHostName());
+            System.out.printf("Connection made on port %d\nHostname: %s\n\n", port, socket.getInetAddress().getHostName());
             state = 1;
 
             writer.println("Hello!");
@@ -84,7 +84,7 @@ public class Server {
                         state = 2;
                         break;
                     case 2:
-                        toClient = reqProtocol(parsedIn, writer);
+                        toClient = reqProtocol(parsedIn);
                         state = 1;
                         break;
                     case 3: 
@@ -97,6 +97,7 @@ public class Server {
                         System.exit(1);
                 }
                 System.out.println("To client: " + toClient);
+                System.out.println("");
                 writer.println(toClient);
 
             }
@@ -138,13 +139,10 @@ public class Server {
             else {
                 try {
                     Integer.parseInt(s);
-                    System.out.println("O");
                 } catch(NumberFormatException e) {
-                    System.out.println("X");
                     error = (error.isEmpty() || Integer.parseInt(error) < -4) ? "-4" : error;
                     eflag = true;
                 } catch(NullPointerException e) {
-                    System.out.println("X");
                     error = (error.isEmpty() || Integer.parseInt(error) < -4) ? "-4" : error;
                     eflag = true;
                 }
@@ -153,7 +151,7 @@ public class Server {
         return;
     }
 
-    private String reqProtocol(String[] req, PrintWriter writer) {
+    private String reqProtocol(String[] req) {
         int result = 0;
         String mes = "";
         switch (req[0].toLowerCase()) {
